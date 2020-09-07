@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import dev.hotel.entite.Client;
 import dev.hotel.repository.ClientRepository;
 
 @RestController
+
 public class ClientController {
 
 	private ClientRepository cr;
@@ -49,4 +52,22 @@ public class ClientController {
 		}
 
 	}
+
+	@RequestMapping(method = RequestMethod.POST, path = "newClient")
+	public ResponseEntity<?> newClient(@Valid @RequestParam String nom, @Valid @RequestParam String prenoms) {
+		Client c = new Client();
+		c.setNom(nom);
+		c.setPrenoms(prenoms);
+
+		try {
+			cr.save(c);
+			return ResponseEntity.status(HttpStatus.OK).body(c);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+					.body("Le nom et le prénom doivent avoir plus de deux caractères !");
+		}
+
+	}
+
 }

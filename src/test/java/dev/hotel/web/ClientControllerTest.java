@@ -64,6 +64,13 @@ class ClientControllerTest {
 
 		when(cr.findById(uuid)).thenReturn(op);
 
-		this.mockMvc.perform(get("/client/" + uuid)).andExpect(status().isOk());
+		this.mockMvc.perform(get("/client/" + uuid)).andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Fulano"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("P1"));
+	}
+
+	@Test
+	void testNewClient() throws Exception {
+
 	}
 }
