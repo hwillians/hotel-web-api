@@ -2,6 +2,7 @@ package dev.hotel.web;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
@@ -60,10 +61,46 @@ class ClientControllerTest {
 		c1.setNom("Fulano");
 		c1.setPrenoms("P1");
 
-		Optional<Client> op = Optional.of(c1);
+		when(cr.findById(uuid)).thenReturn(Optional.of(c1));
 
-		when(cr.findById(uuid)).thenReturn(op);
+		this.mockMvc.perform(get("/client/" + uuid)).andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Fulano"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("P1"));
+	}
 
-		this.mockMvc.perform(get("/client/" + uuid)).andExpect(status().isOk());
+	@Test
+	void testNewClient() throws Exception {
+
+		String nom = "Fulano";
+		String prenoms = "José";
+
+		Client c = new Client();
+		c.setNom(nom);
+		c.setPrenoms(prenoms);
+
+		when(cr.save(c)).thenReturn(c);
+
+		this.mockMvc.perform(post("/newClient?nom=" + nom + "&prenoms=" + prenoms)).andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Fulano"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("José"));
+
+	}
+
+	@Test
+	void testNewClientNonValide() throws Exception {
+
+		String nom = "f";
+		String prenoms = "j";
+
+		Client c = new Client();
+		c.setNom(nom);
+		c.setPrenoms(prenoms);
+
+		when(cr.save(c)).thenReturn(c);
+
+		this.mockMvc.perform(post("/newClient?nom=" + nom + "&prenoms=" + prenoms)).andExpect(status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").isEmpty())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").isEmpty());
+
 	}
 }

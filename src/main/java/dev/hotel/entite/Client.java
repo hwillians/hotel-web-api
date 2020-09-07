@@ -1,13 +1,15 @@
 package dev.hotel.entite;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.Size;
 
 @Entity
 
 public class Client extends BaseEntite {
 
+	@Size(min = 2)
 	private String nom;
-
+	@Size(min = 2)
 	private String prenoms;
 
 	public Client() {
