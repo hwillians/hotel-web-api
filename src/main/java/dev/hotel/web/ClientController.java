@@ -63,12 +63,8 @@ public class ClientController {
 			cr.save(c);
 			return ResponseEntity.status(HttpStatus.OK).body(c);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-<<<<<<< HEAD
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-=======
+
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
->>>>>>> refs/remotes/origin/master
 					.body("Le nom et le prénom doivent avoir plus de deux caractères !");
 		}
 
