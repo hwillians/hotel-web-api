@@ -47,9 +47,7 @@ public class ClientController {
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("L’UUID ne correspond pas à un uuid de client en base de données !");
-
 		}
-
 	}
 
 	@PostMapping
@@ -62,7 +60,5 @@ public class ClientController {
 		} else {
 			return ResponseEntity.badRequest().body("Le nom et le prénom doivent avoir plus de deux caractères !");
 		}
-
 	}
-
 }

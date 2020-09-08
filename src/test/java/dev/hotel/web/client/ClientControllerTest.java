@@ -1,4 +1,4 @@
-package dev.hotel.web;
+package dev.hotel.web.client;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import dev.hotel.entite.Client;
 import dev.hotel.service.ClientService;
-import dev.hotel.web.client.ClientController;
 
 @WebMvcTest(ClientController.class)
 class ClientControllerTest {
@@ -48,8 +47,6 @@ class ClientControllerTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("[0].prenoms").value("P1"))
 				.andExpect(MockMvcResultMatchers.jsonPath("[1].nom").value("Sutano"))
 				.andExpect(MockMvcResultMatchers.jsonPath("[1].prenoms").value("P2"));
-		;
-
 	}
 
 	@Test
@@ -98,7 +95,6 @@ class ClientControllerTest {
 		c.setNom(nom);
 		c.setPrenoms(prenoms);
 
-		// when(cServ.save(c)).thenReturn(c);
 		when(cServ.creerClient(nom, prenoms)).thenReturn(c);
 
 		this.mockMvc
