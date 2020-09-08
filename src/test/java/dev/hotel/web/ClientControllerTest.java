@@ -68,6 +68,7 @@ class ClientControllerTest {
 				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("P1"));
 	}
 
+<<<<<<< HEAD
 	@Test
 	void testNewClient() throws Exception {
 
@@ -101,6 +102,15 @@ class ClientControllerTest {
 		this.mockMvc.perform(post("/newClient?nom=" + c.getNom() + "&prenoms=" + c.getPrenoms()))
 				.andExpect(status().isBadRequest()).andExpect(MockMvcResultMatchers.jsonPath("$.nom").isEmpty())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").isEmpty());
+=======
+		this.mockMvc.perform(get("/client/" + uuid)).andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Fulano"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("P1"));
+	}
+
+	@Test
+	void testNewClient() throws Exception {
+>>>>>>> refs/remotes/origin/master
 
 	}
 }
