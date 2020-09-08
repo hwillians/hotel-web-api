@@ -78,7 +78,7 @@ class ClientControllerTest {
 		c.setNom(nom);
 		c.setPrenoms(prenoms);
 
-		when(cr.save(c)).thenReturn(c);
+		// when(cr.save(c)).thenReturn(c);
 
 		this.mockMvc.perform(post("/newClient?nom=" + nom + "&prenoms=" + prenoms)).andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Fulano"))
@@ -98,8 +98,8 @@ class ClientControllerTest {
 
 		when(cr.save(c)).thenReturn(c);
 
-		this.mockMvc.perform(post("/newClient?nom=" + nom + "&prenoms=" + prenoms)).andExpect(status().isBadRequest())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").isEmpty())
+		this.mockMvc.perform(post("/newClient?nom=" + c.getNom() + "&prenoms=" + c.getPrenoms()))
+				.andExpect(status().isBadRequest()).andExpect(MockMvcResultMatchers.jsonPath("$.nom").isEmpty())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").isEmpty());
 
 	}
