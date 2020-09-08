@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import dev.hotel.entite.Client;
-import dev.hotel.repository.ClientRepository;
+import dev.hotel.service.ClientService;
+import dev.hotel.web.client.ClientController;
 
 @WebMvcTest(ClientController.class)
 class ClientControllerTest {
@@ -28,7 +28,7 @@ class ClientControllerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private ClientRepository cr;
+	private ClientService cServ;
 
 	@Test
 	void testListClients() throws Exception {
@@ -41,7 +41,7 @@ class ClientControllerTest {
 		c2.setNom("Sutano");
 		c2.setPrenoms("P2");
 
-		when(cr.findAll(PageRequest.of(0, 3))).thenReturn(new PageImpl<>(Arrays.asList(c1, c2)));
+		when(cServ.listerClients(0, 3)).thenReturn((Arrays.asList(c1, c2)));
 
 		this.mockMvc.perform(get("/clients?start=0&size=3"))
 				.andExpect(MockMvcResultMatchers.jsonPath("[0].nom").value("Fulano"))
@@ -61,9 +61,9 @@ class ClientControllerTest {
 		c1.setNom("Fulano");
 		c1.setPrenoms("P1");
 
-		when(cr.findById(uuid)).thenReturn(Optional.of(c1));
+		when(cServ.recupererClient(uuid)).thenReturn(Optional.of(c1));
 
-		this.mockMvc.perform(get("/client/" + uuid)).andExpect(status().isOk())
+		this.mockMvc.perform(get("/clients/" + uuid)).andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Fulano"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("P1"));
 	}
@@ -71,18 +71,20 @@ class ClientControllerTest {
 	@Test
 	void testNewClient() throws Exception {
 
-		String nom = "Fulano";
-		String prenoms = "José";
+		String nom = "De Tal";
+		String prenoms = "Fulano";
 
 		Client c = new Client();
 		c.setNom(nom);
 		c.setPrenoms(prenoms);
 
-		// when(cr.save(c)).thenReturn(c);
+		when(cServ.creerClient(nom, prenoms)).thenReturn(c);
 
-		this.mockMvc.perform(post("/newClient?nom=" + nom + "&prenoms=" + prenoms)).andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Fulano"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("José"));
+		this.mockMvc
+				.perform(post("/clients").contentType(MediaType.APPLICATION_JSON)
+						.content("{ \"nom\": \"" + nom + "\" , \"prenoms\": \"" + prenoms + "\"}"))
+				.andExpect(status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("De Tal"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("Fulano"));
 
 	}
 
@@ -96,11 +98,14 @@ class ClientControllerTest {
 		c.setNom(nom);
 		c.setPrenoms(prenoms);
 
-		when(cr.save(c)).thenReturn(c);
+		// when(cServ.save(c)).thenReturn(c);
+		when(cServ.creerClient(nom, prenoms)).thenReturn(c);
 
-		this.mockMvc.perform(post("/newClient?nom=" + nom + "&prenoms=" + prenoms)).andExpect(status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.nom").value("Fulano"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").value("José"));
+		this.mockMvc
+				.perform(post("/clients").contentType(MediaType.APPLICATION_JSON)
+						.content("{ \"nom\": \"" + nom + "\" , \"prenoms\": \"" + prenoms + "\"}"))
+				.andExpect(status().isBadRequest()).andExpect(MockMvcResultMatchers.jsonPath("$.nom").doesNotExist())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.prenoms").doesNotExist());
 	}
 
 }
