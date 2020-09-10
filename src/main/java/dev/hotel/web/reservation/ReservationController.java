@@ -1,13 +1,17 @@
 package dev.hotel.web.reservation;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.hotel.entite.Reservation;
+import dev.hotel.exception.HotelException;
 import dev.hotel.service.ReservationService;
 
 @RestController
@@ -33,9 +37,14 @@ public class ReservationController {
 
 			return ResponseEntity.ok(reservationResponse);
 		} else {
-			return ResponseEntity.badRequest().body(" !");
+			return ResponseEntity.badRequest().body(" Tous les champs sont obligatoires !");
 		}
 
+	}
+
+	@ExceptionHandler(HotelException.class)
+	public ResponseEntity<List<String>> onHotelException(HotelException ex) {
+		return ResponseEntity.badRequest().body(ex.getMessagesErreurs());
 	}
 
 }

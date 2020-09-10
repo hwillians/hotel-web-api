@@ -7,10 +7,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dev.hotel.entite.Chambre;
 import dev.hotel.entite.Client;
 import dev.hotel.entite.Reservation;
+import dev.hotel.exception.HotelException;
 import dev.hotel.repository.ReservationRepository;
 
 @Service
@@ -31,23 +33,37 @@ public class ReservationService {
 		this.chambreService = chambreService;
 	}
 
+	@Transactional
 	public Reservation creerReservation(LocalDate dateDebut, LocalDate dateFin, UUID clientId, List<UUID> chambres) {
+
+		List<String> messagesErreurs = new ArrayList<>();
 
 		Optional<Client> opClient = cServ.recupererClient(clientId);
 
-		Client client = opClient.get();
+		if (opClient.isEmpty()) {
+			messagesErreurs.add("L'uuid " + clientId + " ne correspond à aucun client");
+		}
 
 		List<Chambre> listChambres = new ArrayList<>();
 
-		for (int i = 0; i < chambres.size(); i++) {
-			Chambre chambre = chambreService.recupererChambre(chambres.get(i)).get();
-			listChambres.add(chambre);
+		for (UUID uuidChambre : chambres) {
+			Optional<Chambre> opChambre = chambreService.recupererChambre(uuidChambre);
+			if (opChambre.isPresent()) {
+				listChambres.add(opChambre.get());
+			} else {
+				messagesErreurs.add("L'uuid " + uuidChambre + " ne correspond à aucune chambre");
+			}
+
+		}
+
+		if (!messagesErreurs.isEmpty()) {
+			throw new HotelException(messagesErreurs);
 		}
 
 		Reservation res = new Reservation();
 		res.setDateDebut(dateDebut);
 		res.setDateFin(dateFin);
-		res.setClient(client);
+		res.setClient(opClient.get());
 		res.setChambres(listChambres);
 
 		return resRep.save(res);

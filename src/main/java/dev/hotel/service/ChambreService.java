@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import dev.hotel.entite.Chambre;
-import dev.hotel.web.chambre.ChambreRepository;
+import dev.hotel.repository.ChambreRepository;
 
 @Service
 public class ChambreService {
