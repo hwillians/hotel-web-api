@@ -4,14 +4,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class CreerReservationRequestDto {
-
+	@NotNull
 	private LocalDate dateDebut;
-
+	@NotNull
 	private LocalDate dateFin;
-
+	@NotNull
 	private UUID clientId;
-
+	@NotEmpty
 	private List<UUID> chambres;
 
 	/**

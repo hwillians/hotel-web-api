@@ -1,4 +1,4 @@
-package dev.hotel.web.chambre;
+package dev.hotel.repository;
 
 import java.util.UUID;
 
