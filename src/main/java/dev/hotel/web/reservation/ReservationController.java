@@ -2,6 +2,8 @@ package dev.hotel.web.reservation;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,8 +30,7 @@ public class ReservationController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> reservations(@RequestBody CreerReservationRequestDto res, BindingResult resValid) {
-
+	public ResponseEntity<?> reservations(@Valid @RequestBody CreerReservationRequestDto res, BindingResult resValid) {
 		if (!resValid.hasErrors()) {
 			Reservation reserService = resServ.creerReservation(res.getDateDebut(), res.getDateFin(), res.getClientId(),
 					res.getChambres());
@@ -39,12 +40,10 @@ public class ReservationController {
 		} else {
 			return ResponseEntity.badRequest().body(" Tous les champs sont obligatoires !");
 		}
-
 	}
 
 	@ExceptionHandler(HotelException.class)
 	public ResponseEntity<List<String>> onHotelException(HotelException ex) {
 		return ResponseEntity.badRequest().body(ex.getMessagesErreurs());
 	}
-
 }
