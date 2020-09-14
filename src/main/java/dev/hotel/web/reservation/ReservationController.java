@@ -46,4 +46,5 @@ public class ReservationController {
 	public ResponseEntity<List<String>> onHotelException(HotelException ex) {
 		return ResponseEntity.badRequest().body(ex.getMessagesErreurs());
 	}
+
 }
