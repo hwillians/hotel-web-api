@@ -1,3 +1,5 @@
 # hotel-web-api
 
-Heroku = https://hel-hotel-web-api.herokuapp.com/
+
+Lien vers Heroku : https://hel-hotel-web-api.herokuapp.com/
+
