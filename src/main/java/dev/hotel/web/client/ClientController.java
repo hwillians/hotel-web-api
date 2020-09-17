@@ -36,6 +36,12 @@ public class ClientController {
 
 	}
 
+	@GetMapping
+	public List<Client> ListAllClients() {
+		return cServ.listerAllClients();
+
+	}
+
 	@GetMapping("{uuid}")
 	public ResponseEntity<?> clientsUUID(@PathVariable UUID uuid) {
 
