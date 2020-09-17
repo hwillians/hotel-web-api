@@ -37,4 +37,9 @@ public class ClientService {
 
 	}
 
+	public List<Client> listerAllClients() {
+
+		return cr.findAll();
+	}
+
 }

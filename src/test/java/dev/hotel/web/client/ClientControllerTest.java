@@ -87,7 +87,6 @@ class ClientControllerTest {
 
 	@Test
 	void testNewClientNonValide() throws Exception {
-
 		String nom = "f";
 		String prenoms = "j";
 
