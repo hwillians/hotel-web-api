@@ -56,6 +56,20 @@ public class ClientController {
 		}
 	}
 
+	@GetMapping("{nom}")
+	public Client clientNom(@PathVariable String nom) {
+
+		return cServ.recupererClientParNom(nom);
+
+//		if (c.isPresent()) {
+//			return ResponseEntity.status(HttpStatus.OK).header("message", "Client Trouvé").body(c.get());
+//
+//		} else {
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//					.body("L’UUID ne correspond pas à un uuid de client en base de données !");
+//		}
+	}
+
 	@PostMapping
 	public ResponseEntity<?> newClient(@Valid @RequestBody CreerClientRequestDto client, BindingResult resValid) {
 

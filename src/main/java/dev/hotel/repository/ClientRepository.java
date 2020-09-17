@@ -8,4 +8,6 @@ import dev.hotel.entite.Client;
 
 public interface ClientRepository extends JpaRepository<Client, UUID> {
 
+	Client findByNom(String nom);
+
 }

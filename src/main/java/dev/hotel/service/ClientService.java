@@ -42,4 +42,9 @@ public class ClientService {
 		return cr.findAll();
 	}
 
+	public Client recupererClientParNom(String nom) {
+
+		return cr.findByNom(nom);
+	}
+
 }
