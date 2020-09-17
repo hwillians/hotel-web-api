@@ -36,7 +36,7 @@ public class ClientController {
 
 	}
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<Client> ListAllClients() {
 		return cServ.listerAllClients();
 
