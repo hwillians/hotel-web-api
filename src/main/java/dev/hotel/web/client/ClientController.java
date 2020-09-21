@@ -1,9 +1,12 @@
 package dev.hotel.web.client;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,32 +42,25 @@ public class ClientController {
 
 	}
 
-//	@GetMapping("{uuid}")
-//	public ResponseEntity<?> clientsUUID(@PathVariable UUID uuid) {
-//
-//		Optional<Client> c = cServ.recupererClient(uuid);
-//
-//		if (c.isPresent()) {
-//			return ResponseEntity.status(HttpStatus.OK).header("message", "Client Trouvé").body(c.get());
-//
-//		} else {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//					.body("L’UUID ne correspond pas à un uuid de client en base de données !");
-//		}
-//	}
+	@GetMapping("/id={uuid}")
+	public ResponseEntity<?> clientsUUID(@PathVariable UUID uuid) {
+
+		Optional<Client> c = cServ.recupererClient(uuid);
+
+		if (c.isPresent()) {
+			return ResponseEntity.status(HttpStatus.OK).header("message", "Client Trouvé").body(c.get());
+
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("L’UUID ne correspond pas à un uuid de client en base de données !");
+		}
+	}
 
 	@GetMapping("{nom}")
-	public Client clientNom(@PathVariable String nom) {
+	public List<Client> clientNom(@PathVariable String nom) {
 
 		return cServ.recupererClientParNom(nom);
 
-//		if (c.isPresent()) {
-//			return ResponseEntity.status(HttpStatus.OK).header("message", "Client Trouvé").body(c.get());
-//
-//		} else {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//					.body("L’UUID ne correspond pas à un uuid de client en base de données !");
-//		}
 	}
 
 	@PostMapping
